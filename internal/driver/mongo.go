@@ -2,7 +2,6 @@ package driver
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -23,7 +22,6 @@ func getDatabaseName(uri string) (*string, error) {
 	s := strings.Split(pathWithoutSlash, "?")
 
 	database := s[0]
-	fmt.Println((database))
 	return &database, nil
 }
 

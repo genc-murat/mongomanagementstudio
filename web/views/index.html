@@ -1,4 +1,24 @@
 {% extends "./web/views/layouts/main.html" %}
 {% block content %}
-<p>{{ Title }}</p>
+<p>mongo db connections</p>
+<script type="text/javascript">
+    function getCollectionNames(){
+        return{
+            server:"",
+            port:"",
+            db:"",
+            collectionNames :[],
+            isLoading:false,
+            fetchCollectionNames(){
+                this.isLoading = true;
+                fetch("/collection/list/" + this.server + "/" + this.port + "/" + this.db)
+                .then((res)=>res.json())
+                .then((data) => {
+                    this.isLoading = false;
+                    this.collectionNames = data;
+                });
+            },
+        };
+    }
+</script>
 {% endblock %}

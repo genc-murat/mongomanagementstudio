@@ -2,13 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"mongomanagementstudio/internal/driver"
-	"mongomanagementstudio/internal/handler"
-	"mongomanagementstudio/internal/repository"
-	"mongomanagementstudio/internal/router"
 
-	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -49,21 +43,21 @@ func main() {
 }
 
 func runCollectionStats() error {
-	ctx := context.Background()
-	mongoStore, err := driver.NewMongoStore(ctx, "mongodb://localhost:27017/mongomanagementstudio", "")
-	if err != nil {
-		fmt.Println(err)
-	}
+	// ctx := context.Background()
+	// mongoStore, err := driver.NewMongoStore(ctx, "mongodb://localhost:27017/mongomanagementstudio", "")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	collectionStatsRepo, err := repository.NewCommandRepository(mongoStore)
-	if err != nil {
-		fmt.Println(err)
-	}
+	// collectionStatsRepo, err := repository.NewCommandRepository(mongoStore, "")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	collectionStatsHandler := handler.NewCollectionStatsHandler(collectionStatsRepo)
+	// collectionStatsHandler := handler.NewCollectionStatsHandler(collectionStatsRepo)
 
-	app := fiber.New()
-	router.CollectionStatsRouter(collectionStatsHandler, app)
-	app.Listen(":5353")
-	return nil
+	// app := fiber.New()
+	// router.CollectionStatsRouter(collectionStatsHandler, app)
+	// app.Listen(":5353")
+	// return nil
 }

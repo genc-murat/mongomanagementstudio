@@ -11,6 +11,8 @@ func HTMLRouter(handler *handler.HTMLHandler, app *fiber.App) {
 }
 
 func CollectionStatsRouter(handler *handler.CollectionStatsHandler, app *fiber.App) {
-	collectionStatsRouter := app.Group("/collectionstats")
-	collectionStatsRouter.Get("/:collection", handler.CollectionStats)
+	collectionStatsRouter := app.Group("/collection")
+	//collection/stats/denemeCollection
+	collectionStatsRouter.Get("/stats/:name", handler.CollectionStats)
+	collectionStatsRouter.Get("/list/:server/:port/:db", handler.CollectionNames)
 }

@@ -1,5 +1,6 @@
 <html>
     <head>
+        <title>{{ Title }}</title>
 <style>
     *, *:before, *:after {
   box-sizing: border-box;
@@ -71,7 +72,23 @@ h1, p {
     <body>
         <div class="wrapper">
             <header class="header">My header</header>
-            <aside class="sidebar">Sidebar</aside>
+            <aside class="sidebar">
+                
+                <div x-data="getCollectionNames()" x-init="fetchCollectionNames()">
+                  <input type="text" name="server" x-model="server"/>
+                  <input type="text" name="port" x-model="port"/>
+                  <input type="text" name="db" x-model="db"/>
+                  <button @click="fetchCollectionNames()">Connect</button>
+                  <ul>
+                    <template x-for="coll in collectionNames">
+                       <li x-text="coll"></li>
+                    </template>
+                  </ul>
+                </div>
+                 
+              
+              
+            </aside>
             <article class="content">
                 {% block content %}{% endblock %}
             </article>
@@ -79,6 +96,7 @@ h1, p {
           </div>
           
     </body>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js" defer></script>
 </html>
 
 

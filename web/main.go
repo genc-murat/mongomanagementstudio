@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"mongomanagementstudio/internal/driver"
 	"mongomanagementstudio/internal/handler"
 	"mongomanagementstudio/internal/repository"
 	"mongomanagementstudio/internal/router"
@@ -50,13 +49,13 @@ func main() {
 }
 
 func runCollectionStats() error {
-	ctx := context.Background()
-	mongoStore, err := driver.NewMongoStore(ctx, "mongodb://localhost:27017/mongomanagementstudio", "")
-	if err != nil {
-		fmt.Println(err)
-	}
+	//ctx := context.Background()
+	// mongoStore, err := driver.NewMongoStore(ctx, "mongodb://localhost:27017/mongomanagementstudio", "")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	collectionStatsRepo, err := repository.NewCommandRepository(mongoStore)
+	collectionStatsRepo, err := repository.NewCommandRepository(nil, "")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -64,7 +63,7 @@ func runCollectionStats() error {
 	collectionStatsHandler := handler.NewCollectionStatsHandler(collectionStatsRepo)
 	htmlHandler := handler.NewHTMLHandler(collectionStatsRepo)
 
-	engine := django.New("./web/views", ".html")
+	engine := django.New("web/views", ".html")
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
