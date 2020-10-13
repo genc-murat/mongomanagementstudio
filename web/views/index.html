@@ -1,12 +1,23 @@
 {% extends "./web/views/layouts/main.html" %}
 {% block content %}
-<p>mongo db connections</p>
+<template x-if="collectionStats != null">
+    <span  x-text="collectionStats.size"></span> 
+
+</template>
+
+    
+ 
+ 
+
 <script type="text/javascript">
-    function getCollectionNames(){
+
+    function mongomanagement(){
         return{
             server:"",
             port:"",
             db:"",
+            collectionSize:null,
+            collectionStats:null,
             collectionNames :[],
             isLoading:false,
             fetchCollectionNames(){
@@ -18,7 +29,16 @@
                     this.collectionNames = data;
                 });
             },
-        };
-    }
+            getStats(coll){
+                fetch("/collection/stats/" + coll)
+                .then((res) => res.json())
+                .then((data) =>{
+                    this.isLoading = false;
+                    this.collectionStats = data;
+                });
+            },
+      };
+        }
+    
 </script>
 {% endblock %}
