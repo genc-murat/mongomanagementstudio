@@ -1,7 +1,70 @@
 {% extends "./web/views/layouts/main.html" %}
 {% block content %}
 <template x-if="collectionStats != null">
-    <span  x-text="collectionStats.size"></span> 
+<table style="width:100%;color:#fff;">
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.ns"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.size"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.count"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.size"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.avgObjSize"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.storageSize"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.freeStorageSize"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.capped"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.max"></span> </td>
+        
+    </tr>
+    <tr>
+        <td></td>
+        <td><span x-text="collectionStats.maxSize"></span> </td>
+        
+    </tr>
+    <tr>
+        <td>------</td>
+        <td><span x-text="collectionStats.wiredTiger['block-manager']['file bytes available for reuse']"></span> </td>
+        
+    </tr>
+    <tr>
+        <td>****</td>
+        <td><span x-text="collectionStats.wiredTiger['block-manager']['file size in bytes']"></span> </td>
+        
+    </tr>
+  
+</table>
+
 
 </template>
 

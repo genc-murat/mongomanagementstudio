@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"mongomanagementstudio/internal/models"
 	"mongomanagementstudio/internal/store"
 
@@ -18,14 +19,17 @@ func NewCollectionStatsHandler(repo store.Repository) *CollectionStatsHandler {
 }
 
 func (h *CollectionStatsHandler) CollectionStats(c *fiber.Ctx) error {
-	//collection := c.Params("collection")
-	result := h.repo.RunCommand(context.Background(), bson.M{"collStats": "names"})
+	collection := c.Params("name")
+	result := h.repo.RunCommand(context.Background(), bson.M{"collStats": collection})
+
 	data, err := bson.Marshal(result)
 	if err != nil {
 
 	}
+
 	var collectionStats models.CollectionStats
 	err = bson.Unmarshal(data, &collectionStats)
+	fmt.Println(collectionStats)
 	c.JSON(collectionStats)
 	return nil
 }

@@ -83,7 +83,7 @@ h1, p {
                   <button @click="fetchCollectionNames()">Connect</button>
                   <ul>
                     <template x-for="coll in collectionNames">
-                       <li><button @click="getStats(coll)">ffff</button></li>
+                       <li><a href="javascript:;" @click="getStats(coll)" x-text="coll"></a></li>
                     </template>
                   </ul>
             
