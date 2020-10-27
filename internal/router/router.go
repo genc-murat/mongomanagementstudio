@@ -15,4 +15,5 @@ func CollectionStatsRouter(handler *handler.CollectionStatsHandler, app *fiber.A
 	//collection/stats/denemeCollection
 	collectionStatsRouter.Get("/stats/:name", handler.CollectionStats)
 	collectionStatsRouter.Get("/list/:server/:port/:db", handler.CollectionNames)
+	collectionStatsRouter.Get("/stats/compact/:name", handler.Compact)
 }

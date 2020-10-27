@@ -67,6 +67,9 @@ func runCollectionStats() error {
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
+	app.Static("/public/css", "./web/static/css")
+	app.Static("/public/img", "./web/static/img")
+	app.Static("/public/js", "./web/static/js")
 	router.CollectionStatsRouter(collectionStatsHandler, app)
 	router.HTMLRouter(htmlHandler, app)
 	app.Listen(":5353")

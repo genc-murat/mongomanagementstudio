@@ -18,7 +18,6 @@ func NewCommandRepository(store *driver.MongoStore, connectionString string) (*C
 }
 
 func (commandRepo *CommandRepository) RunCommand(ctx context.Context, command bson.M) bson.M {
-	fmt.Println(command)
 	commandResult := commandRepo.store.Database.RunCommand(ctx, command)
 	var document bson.M
 

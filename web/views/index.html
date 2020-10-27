@@ -1,107 +1,184 @@
 {% extends "./web/views/layouts/main.html" %}
 {% block content %}
 <template x-if="collectionStats != null">
-<table style="width:100%;color:#fff;">
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.ns"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.size"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.count"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.size"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.avgObjSize"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.storageSize"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.freeStorageSize"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.capped"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.max"></span> </td>
-        
-    </tr>
-    <tr>
-        <td></td>
-        <td><span x-text="collectionStats.maxSize"></span> </td>
-        
-    </tr>
-    <tr>
-        <td>------</td>
-        <td><span x-text="collectionStats.wiredTiger['block-manager']['file bytes available for reuse']"></span> </td>
-        
-    </tr>
-    <tr>
-        <td>****</td>
-        <td><span x-text="collectionStats.wiredTiger['block-manager']['file size in bytes']"></span> </td>
-        
-    </tr>
-  
-</table>
+    <table style="width:100%;color:#000;">
+        <tr>
+            <td rowspan="6" style="vertical-align: top;">   <button @click="compact">Compact</button></td>
+        </tr>
+        <tr>
+            <td>NS</td>
+            <td><span x-text="collectionStats.ns"></span> </td>
 
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td><span x-text="collectionStats.size"></span> </td>
+
+        </tr>
+        <!-- <tr>
+            <td>Count</td>
+            <td><span x-text="collectionStats.count"></span> </td>
+
+        </tr>
+        <tr>
+            <td>avgObjSize</td>
+            <td><span x-text="collectionStats.avgObjSize"></span> </td>
+
+        </tr>
+        <tr>
+            <td>storageSize</td>
+            <td><span x-text="collectionStats.storageSize"></span> </td>
+
+        </tr>
+        <tr>
+            <td>freeStorageSize</td>
+            <td><span x-text="collectionStats.freeStorageSize"></span> </td>
+
+        </tr>
+        <tr>
+            <td>capped</td>
+            <td><span x-text="collectionStats.capped"></span> </td>
+
+        </tr>
+        <tr>
+            <td>max</td>
+            <td><span x-text="collectionStats.max"></span> </td>
+
+        </tr>
+        <tr>
+            <td>maxSize</td>
+            <td><span x-text="collectionStats.maxSize"></span> </td>
+
+        </tr> -->
+        <tr>
+            <td>file bytes available for reuse</td>
+            <td><span x-text="collectionStats.wiredTiger['block-manager']['file bytes available for reuse']"></span>
+            </td>
+
+        </tr>
+        <tr>
+            <td>file size in bytes</td>
+            <td><span x-text="collectionStats.wiredTiger['block-manager']['file size in bytes']"></span> </td>
+
+        </tr>
+        <tr>
+            <td colspan="2">
+             
+                bytes freed
+                <span x-text="compactBytesFreed"></span>
+                ok?
+                <span x-text="compactOK"></span>
+            </td>
+        </tr>
+    </table>
 
 </template>
+<div id="chartContainer"></div>
 
-    
- 
- 
+
+
 
 <script type="text/javascript">
 
-    function mongomanagement(){
-        return{
-            server:"",
-            port:"",
-            db:"",
-            collectionSize:null,
-            collectionStats:null,
-            collectionNames :[],
-            isLoading:false,
-            fetchCollectionNames(){
+    function mongomanagement() {
+        return {
+            server: "localhost",
+            port: "27017",
+            db: "mongomanagementstudio",
+            collectionSize: null,
+            collectionStats: null,
+            collectionNames: [],
+            currentCollection: "",
+            isLoading: false,
+            compactBytesFreed: 0,
+            compactOK: 0,
+            fetchCollectionNames() {
                 this.isLoading = true;
                 fetch("/collection/list/" + this.server + "/" + this.port + "/" + this.db)
-                .then((res)=>res.json())
-                .then((data) => {
-                    this.isLoading = false;
-                    this.collectionNames = data;
-                });
+                    .then((res) => res.json())
+                    .then((data) => {
+                        this.isLoading = false;
+                        this.collectionNames = data;
+                    });
             },
-            getStats(coll){
+            compact() {
+                this.isLoading = true;
+                fetch("/collection/stats/compact/" + this.currentCollection)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        this.isLoading = true;
+                        this.compactBytesFreed = data["bytesFreed"];
+                        this.compactOK = data["ok"];
+                        console.log(data);
+                        this.getStats(this.currentCollection);
+                    });
+            },
+            getStats(coll) {
+                this.isLoading = true;
                 fetch("/collection/stats/" + coll)
-                .then((res) => res.json())
-                .then((data) =>{
-                    this.isLoading = false;
-                    this.collectionStats = data;
-                });
+                    .then((res) => res.json())
+                    .then((data) => {
+                        //let updateData = !(this.currentCollection.length == 0 || this.currentCollection == coll);
+                        //console.log(updateData);
+                        this.currentCollection = coll;
+                        this.isLoading = false;
+                        this.collectionStats = data;
+
+                        let container = document.getElementById("chartContainer");
+                        container.innerHTML = "";
+                        let chartDiv = document.createElement("div");
+                        let chartDivId = "chart-id";
+                        chartDiv.id = chartDivId;
+                        container.appendChild(chartDiv);
+
+
+                        const chartData = [
+                            { type: 'file size in bytes', value: this.collectionStats.wiredTiger['block-manager']['file size in bytes'] },
+                            { type: 'file bytes available for reuse', value: this.collectionStats.wiredTiger['block-manager']['file bytes available for reuse'] },
+
+                        ];
+
+                        const chart = new G2.Chart({
+                            container: chartDivId,
+                            autoFit: true,
+                            height: 500,
+                        });
+
+
+                        chart.coordinate('theta', {
+                            radius: 0.75,
+                        });
+                        chart.data(chartData);
+
+
+                        chart.tooltip({
+                            showTitle: false,
+                            showMarkers: false,
+                        });
+
+                        chart
+                            .interval()
+                            .position('value')
+                            .color('type')
+                            .label('type*value', {
+                                layout: { type: 'pie-spider' },
+                                labelHeight: 20,
+                                content: (obj) => `${obj.type} (${obj.value})`,
+                                labelLine: {
+                                    style: {
+                                        lineWidth: 0.5,
+                                    },
+                                },
+                            })
+                            .adjust('stack');
+
+                        chart.interaction('element-active');
+
+                        chart.render();
+                    });
             },
-      };
-        }
-    
+        };
+    }
+
 </script>
 {% endblock %}

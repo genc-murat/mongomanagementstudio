@@ -1,104 +1,186 @@
 <html>
-    <head>
-        <title>{{ Title }}</title>
-<style>
-    *, *:before, *:after {
-  box-sizing: border-box;
-}
 
-body {
-  margin: 40px;
-  font-family: 'Open Sans', 'sans-serif';
-  background-color: #fff;
-  color: #444;
-}
+<head>
+  <title>{{ Title }}</title>
+  <style>
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
 
-h1, p {
-  margin: 0 0 1em 0;
-}
+    body {
+      margin: 40px;
+      font-family: 'Open Sans', 'sans-serif';
+      background-color: #fff;
+      color: #ccc;
+    }
 
-.wrapper {
-  max-width: 1200px;
-  margin: 0 20px;
-  display: grid;
-  grid-gap: 10px;
-}
+    h1,
+    p {
+      margin: 0 0 1em 0;
+    }
 
-@media screen and (min-width: 500px) {
+    a {
+      font-size: 80%;
+      color: #fff;
+    }
 
-  /* no grid support? */
-  .sidebar {
-    float: left;
-    width: 19.1489%;
-  }
+    .wrapper {
+      max-width: 1200px;
+      margin: 0 20px;
+      display: grid;
+      grid-gap: 10px;
+    }
 
-  .content {
-    float: right;
-    width: 79.7872%;
-  }
+    @media screen and (min-width: 500px) {
 
-  .wrapper {
-    margin: 0 auto;
-    grid-template-columns: 1fr 3fr;
-  }
-  
-  .header, .footer {
-    grid-column: 1 / -1;
-    /* needed for the floated layout */
-    clear: both;
-  }
+      /* no grid support? */
+      .sidebar {
+        float: left;
+        width: 21.1489%;
+      }
 
-}
+      .content {
+        float: right;
+        width: 77.7872%;
+      }
 
-.wrapper > * {
-  background-color: #444;
-  color: #fff;
-  border-radius: 5px;
-  padding: 20px;
-  font-size: 150%;
-  /* needed for the floated layout*/
-  margin-bottom: 10px;
-}
+      .wrapper {
+        margin: 0 auto;
+        grid-template-columns: 1fr 3fr;
+      }
 
-/* We need to set the widths used on floated items back to auto, and remove the bottom margin as when we have grid we have gaps. */
-@supports (display: grid) {
-  .wrapper > * {
-    width: auto;
-    margin: 0;
-  }
-}
-</style>
-    </head>
-    <body>
-        <div class="wrapper" x-data="mongomanagement()" >
-            <header class="header">
-              <select ></select>
-            </header>
-            <aside class="sidebar">
-                
-             
-                  <input type="text" name="server" x-model="server"/>
-                  <input type="text" name="port" x-model="port"/>
-                  <input type="text" name="db" x-model="db"/>
-                  <button @click="fetchCollectionNames()">Connect</button>
-                  <ul>
-                    <template x-for="coll in collectionNames">
-                       <li><a href="javascript:;" @click="getStats(coll)" x-text="coll"></a></li>
-                    </template>
-                  </ul>
-            
-                 
-            </aside>
-            <article class="content">
-                {% block content %}{% endblock %}
-            </article>
-            <footer class="footer"></footer>
-          </div>
-          
-    </body>
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js" defer></script>
+      .header,
+      .footer {
+        grid-column: 1 / -1;
+        /* needed for the floated layout */
+        clear: both;
+      }
+
+    }
+
+    .wrapper>* {
+      background-color: #ccc;
+      color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      font-size: 150%;
+      /* needed for the floated layout*/
+      margin-bottom: 10px;
+    }
+
+    /* We need to set the widths used on floated items back to auto, and remove the bottom margin as when we have grid we have gaps. */
+    @supports (display: grid) {
+      .wrapper>* {
+        width: auto;
+        margin: 0;
+      }
+    }
+
+    ul.collection-list {
+      list-style-type: none;
+      margin: 5;
+      padding: 0;
+    }
+
+    .lds-circle {
+      display: inline-block;
+      transform: translateZ(1px);
+    }
+
+    .lds-circle>div {
+      display: inline-block;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border-radius: 50%;
+      background: #fff;
+      animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+
+    @keyframes lds-circle {
+
+      0%,
+      100% {
+        animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+      }
+
+      0% {
+        transform: rotateY(0deg);
+      }
+
+      50% {
+        transform: rotateY(1800deg);
+        animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+      }
+
+      100% {
+        transform: rotateY(3600deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper" x-data="mongomanagement()">
+    <header class="header">
+      <select></select>
+    </header>
+    <aside class="sidebar">
+      <table style="width:100%;color:black">
+        <tr>
+          <td>Server</td>
+          <td>
+            <input type="text" name="server" x-model="server" />
+          </td>
+        </tr>
+        <tr>
+          <td>Port</td>
+          <td><input type="text" name="port" x-model="port" /></td>
+        </tr>
+        <tr>
+          <td>Database</td>
+          <td><input type="text" name="db" x-model="db" /></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align: right;">
+
+            <button @click="fetchCollectionNames()">Connect</button>
+
+          </td>
+
+        </tr>
+      </table>
+
+
+      <ul class="collection-list">
+        <template x-if="collectionNames.length > 0">
+          <li style="text-decoration: underline;font-weight: bold;">Collections</li>
+
+        </template>
+        <template x-for="coll in collectionNames">
+          <li><a href="javascript:;" @click="getStats(coll)" x-text="coll"></a></li>
+        </template>
+      </ul>
+
+
+    </aside>
+    <article class="content">
+      {% block content %}{% endblock %}
+    </article>
+    <footer class="footer"></footer>
+
+    <div x-show="isLoading" class="lds-circle">
+      <div></div>
+    </div>
+
+  </div>
+
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/antv-g2/4.0.15/g2.min.js" integrity="sha512-eR9TnC9cK/VXoblQGev8t+O0eNbXIZy2+5rHiCBNc4RPHaZRCrf1r5R171r8rr2B0pjXeEm4b4exDqW14zLJcg==" crossorigin="anonymous"></script>
+
 </html>
-
-
-
-  
